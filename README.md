@@ -1,24 +1,8 @@
-# mengxuegu-auth-center
+# blog-auth-center
 
-## Project setup
-```
-npm install
-```
+## SSO单点登录系统
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### 流程图
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![process](./src/assets/image/sso.png)

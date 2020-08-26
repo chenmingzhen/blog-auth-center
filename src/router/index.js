@@ -17,6 +17,16 @@ const router = new Router({
         },
       ],
     },
+    {
+      path:'/refresh',
+      component:()=>import('@/components/layout'),
+      children: [
+        {
+          path: "",
+          component: () => import("@/views/auth/refresh"),
+        },
+      ],
+    }
   ],
 });
 

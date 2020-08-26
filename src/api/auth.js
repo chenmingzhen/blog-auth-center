@@ -54,3 +54,14 @@ export function logout(accessToken) {
     params: { accessToken },
   });
 }
+
+//刷新令牌
+export function refreshToken(refreshToken) {
+  return request({
+    headers,
+    auth,
+    url: `/auth/user/refreshToken`,
+    method: "get",
+    params: { refreshToken },
+  });
+}

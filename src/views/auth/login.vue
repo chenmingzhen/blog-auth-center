@@ -108,6 +108,7 @@
 </template>
 <script >
 import { isvalidUsername } from "@/utils/validate"; // 校验规则
+import { getAggrentment, getUserByUsername, register } from "@/api/auth";
 export default {
   data() {
     return {
@@ -179,13 +180,72 @@ export default {
     },
 
     // 提交注册
-    regSubmit() {},
+    async regSubmit() {
+      // 如果在登录中，不允许登录
+      if (this.subState) {
+        return false;
+      }
+
+      if (!this.registerData.check) {
+        this.regMessage = "请阅读并同意用户协议";
+        return false;
+      }
+      
+      if (!isvalidUsername(this.registerData.username)) {
+        this.regMessage = "请输入4-30位用户名, 中文、数字、字母和下划线";
+        return false;
+      }
+
+      //检验用户名是否存在
+      const { code, message, data } = await getUserByUsername(
+        this.registerData.username
+      );
+      if (code !== 20000) {
+        this.regMessage = message;
+        return false;
+      }
+      if (data) {
+        //true 已注册 false 未
+        this.regMessage = "用户名已被注册，请重新输入用户名";
+        return false;
+      }
+      if (
+        this.registerData.password.length < 6 ||
+        this.registerData.password.length > 30
+      ) {
+        this.regMessage = "请输入6-30位密码,区分大小写且不可有空格";
+        return false;
+      }
+      if (this.registerData.password !== this.registerData.repPassword) {
+        this.regMessage = "两次输入密码不一致";
+        return false;
+      }
+      this.subState = true; // 提交中
+      // 提交注册
+      register(this.registerData)
+        .then((response) => {
+          this.subState = false;
+          const { code, message } = response;
+          if (code === 20000) {
+            // 注册成功，切换登录页
+            this.changetab(1);
+          } else {
+            this.regMessage = message;
+          }
+        })
+        .catch(() => {
+          this.subState = false;
+          this.regMessage = "系统繁忙，请稍后重试";
+        });
+    },
   },
 
-  created() {
+  async created() {
     if (this.$route.qurey && this.$route.qurey.redirectURL) {
       this.redirectURL = this.$route.query.redirectURL;
     }
+    //获取协议内容
+    this.xieyiContent = await getAggrentment();
   },
 };
 </script>

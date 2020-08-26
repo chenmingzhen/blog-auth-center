@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from "@/store";
 
 Vue.use(Router);
 
@@ -17,6 +18,16 @@ const router = new Router({
       ],
     },
   ],
+});
+
+//拦截退出路由 进行退出处理
+router.beforeEach((to, from, next) => {
+  if (to.path === "/logout") {
+    //退出
+    store.dispatch("UserLogout", to.query.redirectURL);
+  } else {
+    next();
+  }
 });
 
 export default router;

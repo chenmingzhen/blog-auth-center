@@ -1,4 +1,4 @@
-import { login } from "@/api/auth";
+import { login, logout } from "@/api/auth";
 import { PcCookie, Key } from "@/utils/cookie";
 
 //状态
@@ -13,7 +13,6 @@ const state = {
 //改变状态值
 const mutations = {
   SET_USER_STATE(state, data) {
-    console.log("SET_USER_STATE", data);
     const { userInfo, access_token, refresh_token } = data;
     state.userInfo = userInfo;
     state.accessToken = access_token;
@@ -57,6 +56,20 @@ const actions = {
           reject(error);
         });
     });
+  },
+  UserLogout({ state, commit }, redirectURL) {
+    logout(state.accessToken)
+      .then(() => {
+        // 重置状态
+        commit("RESET_USER_STATE");
+        // 退出后，重写向地址，如果没有传重写向到登录页 /
+        window.location.href = redirectURL || "/";
+      })
+      .catch(() => {
+        // 重置状态
+        commit("RESET_USER_STATE");
+        window.location.href = redirectURL || "/";
+      });
   },
 };
 

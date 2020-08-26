@@ -9,7 +9,7 @@
 
 ### 退出流程图
 
-![process](./src/assets/image/sso退出系统.png)
+![process](./src/assets/image/SSOlogout.png)
 
 1.接收所有应用的退出请求
 
